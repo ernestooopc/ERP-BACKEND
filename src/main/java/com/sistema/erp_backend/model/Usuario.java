@@ -2,7 +2,9 @@ package com.sistema.erp_backend.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,18 +20,29 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "username", unique = true, nullable = false, length = 50)
     private String username;
+    @Column(name = "email", unique = true, nullable = false, length = 100)
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
+    @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
+    @Column(name = "apellido", nullable = false, length = 100)
     private String apellido;
+    @Column(name = "telefono")
     private String telefono;
+    @Column(name = "rol", nullable = false, length = 30)
     private String rol;
+    @Column(name = "estado", nullable = false)
     private Boolean estado;
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
     private LocalDateTime fechaCreacion;
+    @Column(name = "fecha_actualizacion")
     private LocalDateTime fechaActualizacion;
 
-    public Usuario() {
+    protected Usuario() {
     }
 
     public Usuario(Long id, String username, String email, String password, String nombre, String apellido, String telefono, String rol, Boolean estado) {
@@ -103,23 +116,17 @@ public class Usuario {
     }
 
     public void setUsername(String username) {
-        if(username == null){                    
-            throw new IllegalArgumentException("El nombre de usuario no puede ser nulo");
-        }
+        ValidacionUtil.validarUsername(username);
         this.username = username;
     }
 
     public void setEmail(String email) {
-        if(email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")){
-            throw new IllegalArgumentException("El email no puede ser nulo y debe tener un formato válido");
-        }
+        ValidacionUtil.validarEmail(email);
         this.email = email;
     }
 
     public void setPassword(String password) {
-        if(password == null || password.length() < 8){                    
-            throw new IllegalArgumentException("La contraseña no puede ser nula y debe tener al menos 8 caracteres");
-        }
+        ValidacionUtil.validarPassword(password);
         this.password = password;
     }
 
@@ -132,10 +139,8 @@ public class Usuario {
     }
 
     public void setTelefono(String telefono) {
-        if(telefono == null || !telefono.matches("\\d{9}")){
-            throw new IllegalArgumentException("El teléfono no puede ser nulo y debe tener 9 dígitos");
-        }
-        this.telefono = telefono;
+        ValidacionUtil.validarTelefono(telefono);
+        this.telefono = telefono.trim();
     }
 
     public void setRol(String rol) {

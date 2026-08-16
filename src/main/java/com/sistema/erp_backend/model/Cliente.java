@@ -2,6 +2,7 @@ package com.sistema.erp_backend.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,19 +16,20 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String tipoDocumento; // 1: DNI, 2: RUC, 3: Pasaporte
+    @Column(name = "numero_documento", unique = true, nullable = false)
     private String numeroDocumento;
     private String nombreRazonSocial;
     private String direccion;
     private String telefono;
     private String email;
     private LocalDateTime fechaCreacion;
+    private boolean estado = true;
 
-    public Cliente() {
+    protected Cliente() {
     }
 
-    public Cliente(Long id, String tipoDocumento, String numeroDocumento, String nombreRazonSocial, String direccion, String telefono, String email) {
+    public Cliente(Long id, String tipoDocumento, String numeroDocumento, String nombreRazonSocial, String direccion, String telefono, String email, LocalDateTime fechaCreacion, boolean estado) {
         this.id = id;
         this.tipoDocumento = tipoDocumento;
         this.numeroDocumento = numeroDocumento;
@@ -35,15 +37,19 @@ public class Cliente {
         this.direccion = direccion;
         this.telefono = telefono;
         this.email = email;
+        this.fechaCreacion = fechaCreacion;
+        this.estado = estado;
     }
 
-    public Cliente(String tipoDocumento, String numeroDocumento, String nombreRazonSocial, String direccion, String telefono, String email) {
+    public Cliente(String tipoDocumento, String numeroDocumento, String nombreRazonSocial, String direccion, String telefono, String email, LocalDateTime fechaCreacion, boolean estado) {
         this.tipoDocumento = tipoDocumento;
         this.numeroDocumento = numeroDocumento;
         this.nombreRazonSocial = nombreRazonSocial;
         this.direccion = direccion;
         this.telefono = telefono;
         this.email = email;
+        this.fechaCreacion = fechaCreacion;
+        this.estado = estado;
     }
 
     public Long getId() {
@@ -72,6 +78,9 @@ public class Cliente {
 
     public String getEmail() {
         return email;
+    }
+    public boolean isEstado() {
+    return estado;
     }
 
     public LocalDateTime getFechaCreacion() {
@@ -104,23 +113,23 @@ public class Cliente {
     }
 
     public void setTelefono(String telefono) {
-        if(telefono == null || !telefono.matches("\\d{9}")){
-            throw new IllegalArgumentException("El teléfono no puede ser nulo y debe tener 9 dígitos");
-        }
-        this.telefono = telefono;
+        ValidacionUtil.validarTelefono(telefono);
+        this.telefono = telefono.trim();
     }
 
     public void setEmail(String email) {
-        if(email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")){
-            throw new IllegalArgumentException("El email no puede ser nulo y debe tener un formato válido");
-        }
+        ValidacionUtil.validarEmail(email);
         this.email = email;
+    }
+
+    public void setEstado(boolean estado) {
+    this.estado = estado;
     }
 
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    
+
 
 }
