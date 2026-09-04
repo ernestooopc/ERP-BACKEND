@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sistema.erp_backend.exception.ResourceNotFoundException;
 import com.sistema.erp_backend.model.Cliente;
 import com.sistema.erp_backend.repository.ClienteRepository;
 
@@ -70,13 +71,13 @@ public class ClienteService {
     @Transactional(readOnly = true)
     public Cliente buscarPorId(Long id) {
         return clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con ID: " + id));
     }
 
     @Transactional(readOnly = true)
     public Cliente buscarPorNumeroDocumento(String numeroDocumento) {
         return clienteRepository.findByNumeroDocumento(numeroDocumento)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con el documento: " + numeroDocumento));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con el documento: " + numeroDocumento));
     }
 
     @Transactional(readOnly = true)

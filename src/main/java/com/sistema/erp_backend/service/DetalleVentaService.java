@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sistema.erp_backend.exception.ResourceNotFoundException;
 import com.sistema.erp_backend.model.DetalleVenta;
 import com.sistema.erp_backend.repository.DetalleVentaRepository;
 
@@ -29,7 +30,7 @@ public class DetalleVentaService {
     @Transactional(readOnly = true)
     public DetalleVenta buscarPorId(Long detalleId) {
         return detalleVentaRepository.findById(detalleId)
-                .orElseThrow(() -> new RuntimeException("Detalle no encontrado con ID: " + detalleId));
+                .orElseThrow(() -> new ResourceNotFoundException("Detalle no encontrado con ID: " + detalleId));
     }
 
     // 3. Listar todos los detalles

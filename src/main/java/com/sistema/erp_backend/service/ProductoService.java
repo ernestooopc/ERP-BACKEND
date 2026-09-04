@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sistema.erp_backend.exception.ResourceNotFoundException;
 import com.sistema.erp_backend.model.Producto;
 import com.sistema.erp_backend.repository.ProductoRepository;
 
@@ -63,13 +64,13 @@ public class ProductoService {
     @Transactional(readOnly = true)
     public Producto buscarPorId(Long id) {
         return productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + id));
     }
 
     @Transactional(readOnly = true)
     public Producto buscarPorCodigo(String codigo) {
         return productoRepository.findByCodigoAndEstadoTrue(codigo)
-                .orElseThrow(() -> new RuntimeException("Producto activo no encontrado con código: " + codigo));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto activo no encontrado con código: " + codigo));
     }
 
     @Transactional(readOnly = true)

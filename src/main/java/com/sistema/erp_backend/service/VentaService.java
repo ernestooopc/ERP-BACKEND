@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sistema.erp_backend.exception.ResourceNotFoundException;
 import com.sistema.erp_backend.model.DetalleVenta;
 import com.sistema.erp_backend.model.Producto;
 import com.sistema.erp_backend.model.Venta;
@@ -78,7 +79,7 @@ public class VentaService {
     public void anularVenta(Long ventaId) {
         
         Venta venta = ventaRepository.findById(ventaId)
-        .orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + ventaId));
+        .orElseThrow(() -> new ResourceNotFoundException("Venta no encontrada con ID: " + ventaId));
 
         if(!venta.isEstado()){
             throw new RuntimeException("La venta ya está anulada.");
@@ -105,7 +106,7 @@ public class VentaService {
     @Transactional(readOnly = true)
     public Venta obtenerVentaPorId(Long ventaId) {
         return ventaRepository.findById(ventaId)
-                .orElseThrow(() -> new RuntimeException("Venta no encontrada con ID: " + ventaId));
+            .orElseThrow(() -> new ResourceNotFoundException("Venta no encontrada con ID: " + ventaId));
     }
 
     @Transactional(readOnly = true)

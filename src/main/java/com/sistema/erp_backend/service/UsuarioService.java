@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sistema.erp_backend.exception.ResourceNotFoundException;
 import com.sistema.erp_backend.model.Usuario;
 import com.sistema.erp_backend.repository.UsuarioRepository;
 
@@ -84,13 +85,13 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
     }
 
     @Transactional(readOnly = true)
     public Usuario buscarPorUsername(String username) {
         return usuarioRepository.findByUsernameAndEstadoTrue(username)
-                .orElseThrow(() -> new RuntimeException("Usuario activo no encontrado: " + username));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario activo no encontrado: " + username));
     }
 
     @Transactional(readOnly = true)
